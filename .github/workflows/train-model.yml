@@ -1,0 +1,38 @@
+name: Train Credit Risk Model
+
+on:
+    push:
+        paths:
+            - credit_risk_model/**
+            - .github/workflows/train-model.yml
+
+jobs:
+    train-model:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Setup python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.11'
+              
+            - name: Install requirements
+              run: |
+               cd credit_risk_model
+               python -m pip install --upgrade pip
+               pip install - r requirements.txt
+
+            - name: Train model
+              run: |
+               cd credit_risk_mdoel
+               python model.py
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: credit-risk-model
+                path: credit_risk_model/model.pkl
+
